@@ -4,10 +4,11 @@ const mongoose = require('mongoose')
 const cors = require('cors');
 
 let app = express();
+app.use(cors());
+app.options('*', cors());
+
 const port = process.env.PORT || 8080;
 const uri = process.env.URI;
-
-app.use(cors());
 
 mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => {

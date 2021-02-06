@@ -3,7 +3,7 @@ let bodyParser = require('body-parser');
 const mongoose = require('mongoose')
 
 let app = express();
-var port = 8080;
+var port = process.env.PORT || 8080;
 const uri = process.env.URI;
 
 mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})

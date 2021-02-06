@@ -19,6 +19,10 @@ exports.index = function (req, res) {
 
 // Handle create log actions
 exports.new = function (req, res) {
+    console.log("Got create request with " +
+        "\nuserUuid: " + req.body.userUuid +
+        "\ntimestamp: " + req.body.timestamp +
+        "\nactivity: " + req.body.activity)
     var log = new Log();
     log.userUuid = req.body.userUuid;
     log.timestamp = req.body.timestamp;

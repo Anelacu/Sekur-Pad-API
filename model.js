@@ -2,7 +2,6 @@ var mongoose = require('mongoose')
 
 var logSchema = mongoose.Schema({
   userUuid: {type: String, required: true},
-  logUuid: {type: String, required: true},
   timestamp: {type: String, required: true},
   activity: {type: String, required: true}
 });

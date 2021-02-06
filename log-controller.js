@@ -21,7 +21,6 @@ exports.index = function(req, res) {
 exports.new = function(req, res) {
   var log = new Log();
   log.userUuid = req.body.userUuid;
-  log.logUuid = req.body.logUuid;
   log.timestamp = req.body.timestamp;
   log.activity = req.body.activity;
   log.save(function(err) {

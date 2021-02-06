@@ -21,4 +21,3 @@ app.listen(port, function() {
 
 let apiRoutes = require('./api-routes')
 app.use('/api', apiRoutes)
-app.use('/logs', apiRoutes)

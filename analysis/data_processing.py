@@ -2,6 +2,7 @@ import requests
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def fetch():
     url = "https://sekurpad-api.herokuapp.com/api/logs"
     res = requests.get(url)
@@ -78,7 +79,7 @@ def get_errors_per_stage(data):
     return errors
 
 
-def plot_errors_per_stage_all(errors_per_stage_data:dict) -> None:
+def plot_errors_per_stage_all(errors_per_stage_data: dict) -> None:
     means = []
     medians = []
     stages = []
@@ -86,13 +87,13 @@ def plot_errors_per_stage_all(errors_per_stage_data:dict) -> None:
         stages.append(stage)
         means.append(np.mean(errors))
         medians.append(np.median(errors))
-    
+
     x = np.array(stages)
     width = 0.35
     fig, ax = plt.subplots()
-    rects1 = ax.bar(x - width/2, means, width, label='Mean')
-    rects2 = ax.bar(x + width/2, medians, width, label='Median')
-
+    rects1 = ax.bar(x - width/2, means, width, label='Mean', color='coral')
+    rects2 = ax.bar(x + width/2, medians, width, label='Median', color='royalblue')
+    
     plt.legend()
     plt.xlabel("Stage")
     plt.xticks(np.array(stages))
@@ -102,7 +103,7 @@ def plot_errors_per_stage_all(errors_per_stage_data:dict) -> None:
     plt.clf()
 
 
-def plot_completion_times_all(completion_times:dict) -> None:
+def plot_completion_times_all(completion_times: dict) -> None:
     means = []
     medians = []
     stages = []
@@ -110,12 +111,12 @@ def plot_completion_times_all(completion_times:dict) -> None:
         stages.append(stage)
         means.append(np.mean(times))
         medians.append(np.median(times))
-    
+
     x = np.array(stages)
     width = 0.35
     fig, ax = plt.subplots()
-    rects1 = ax.bar(x - width/2, means, width, label='Mean')
-    rects2 = ax.bar(x + width/2, medians, width, label='Median')
+    rects1 = ax.bar(x - width/2, means, width, label='Mean', color='coral')
+    rects2 = ax.bar(x + width/2, medians, width, label='Median', color='royalblue')
 
     plt.legend()
     plt.xlabel("Stage")
@@ -125,7 +126,8 @@ def plot_completion_times_all(completion_times:dict) -> None:
     plt.savefig('plots/completion_time_all.png')
     plt.clf()
 
-def plot_completion_times_scatter(completion_times:dict) -> None:
+
+def plot_completion_times_scatter(completion_times: dict) -> None:
     y = []
     x = []
     stages = []
@@ -135,7 +137,7 @@ def plot_completion_times_scatter(completion_times:dict) -> None:
             x.append(stage)
             y.append(t)
 
-    plt.scatter(x, y, marker='x', alpha=0.5, s=30, c='purple')
+    plt.scatter(x, y, marker='x', alpha=0.5, s=30, c='coral')
     plt.xlabel("Stage")
     plt.xticks(np.array(stages))
     plt.ylabel("Completion time (ms)")
@@ -161,9 +163,15 @@ def plot_errors_box(completion_times:dict) -> None:
     plt.savefig('plots/errors_box.png')
     plt.clf()
 
+
 d = filter_out_uncompleted(group_by_user(fetch()))
 errors_per_stage = get_errors_per_stage(d)
 completion_times = get_completion_times(d)
+
+# Temp data
+errors_per_stage = {i: np.random.normal(3, 1, 40) * ((i-1)%3 + 0.2) for i in range(1, 13)}
+completion_times = {i: np.random.normal(10000, 3000, 40) * ((i-1)%3 * 0.1 + 0.2) for i in range(1, 13)}
+
 plot_errors_per_stage_all(errors_per_stage)
 plot_completion_times_all(completion_times)
 plot_completion_times_scatter(completion_times)

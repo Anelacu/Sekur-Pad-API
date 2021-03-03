@@ -1,4 +1,6 @@
 import requests
+import seaborn as sns
+import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -146,21 +148,16 @@ def plot_completion_times_scatter(completion_times: dict) -> None:
     plt.clf()
 
 
-def plot_errors_box(completion_times:dict) -> None:
-    y = []
-    x = []
-    for stage, times in completion_times.items():
-        y.append(stage)
-        x.append(sum(times))
-
-    data = list(zip(x, y))
-
-    plt.boxplot(data, labels=y)
+def plot_completion_box(completion_times:dict) -> None:
+    df = pd.DataFrame.from_dict(completion_times)
+    data_df = df.melt(var_name='stage',value_name='time')
+    sns.boxplot(x="stage", y="time", data=data_df, color='royalblue', showfliers=False,boxprops=dict(alpha=0.4))
+    sns.stripplot(x="stage", y="time", data=data_df, color='coral', size=6, jitter=False, alpha=0.4, marker='X')
     plt.xlabel("Stage")
-    plt.xticks(np.array(y))
-    plt.ylabel("Errors")
-    plt.title("Number of errors for each stage")
-    plt.savefig('plots/errors_box.png')
+    plt.xticks(range(0, 12))
+    plt.ylabel("Completion time (ms)")
+    plt.title("Completion time for each stage")
+    plt.savefig('plots/completion_time_box_scatter.png')
     plt.clf()
 
 
@@ -175,4 +172,4 @@ completion_times = {i: np.random.normal(10000, 3000, 40) * ((i-1)%3 * 0.1 + 0.2)
 plot_errors_per_stage_all(errors_per_stage)
 plot_completion_times_all(completion_times)
 plot_completion_times_scatter(completion_times)
-plot_errors_box(completion_times)
+plot_completion_box(completion_times)

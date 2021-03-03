@@ -1,5 +1,6 @@
 import requests
-
+import matplotlib.pyplot as plt
+import numpy as np
 
 def fetch():
     url = "https://sekurpad-api.herokuapp.com/api/logs"
@@ -77,6 +78,74 @@ def get_errors_per_stage(data):
     return errors
 
 
+def plot_errors_per_stage_all(errors_per_stage_data:dict) -> None:
+    means = []
+    medians = []
+    stages = []
+    for stage, errors in errors_per_stage_data.items():
+        stages.append(stage)
+        means.append(np.mean(errors))
+        medians.append(np.median(errors))
+    
+    x = np.array(stages)
+    width = 0.35
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width/2, means, width, label='Mean')
+    rects2 = ax.bar(x + width/2, medians, width, label='Median')
+
+    plt.legend()
+    plt.xlabel("Stage")
+    plt.xticks(np.array(stages))
+    plt.ylabel("Number of errors")
+    plt.title("Mean vs Median number of errors at each stage")
+    plt.savefig('plots/errors_per_stage_all.png')
+    plt.clf()
+
+
+def plot_completion_times_all(completion_times:dict) -> None:
+    means = []
+    medians = []
+    stages = []
+    for stage, times in completion_times.items():
+        stages.append(stage)
+        means.append(np.mean(times))
+        medians.append(np.median(times))
+    
+    x = np.array(stages)
+    width = 0.35
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width/2, means, width, label='Mean')
+    rects2 = ax.bar(x + width/2, medians, width, label='Median')
+
+    plt.legend()
+    plt.xlabel("Stage")
+    plt.xticks(np.array(stages))
+    plt.ylabel("Completion time (ms)")
+    plt.title("Mean vs Median completion time for each stage")
+    plt.savefig('plots/completion_time_all.png')
+    plt.clf()
+
+def plot_completion_times_scatter(completion_times:dict) -> None:
+    y = []
+    x = []
+    stages = []
+    for stage, times in completion_times.items():
+        stages.append(stage)
+        for t in times:
+            x.append(stage)
+            y.append(t)
+
+    plt.scatter(x, y, marker='x', alpha=0.5, s=30, c='purple')
+    plt.xlabel("Stage")
+    plt.xticks(np.array(stages))
+    plt.ylabel("Completion time (ms)")
+    plt.title("Completion time for each stage")
+    plt.savefig('plots/completion_time_scatter.png')
+    plt.clf()
+
 d = filter_out_uncompleted(group_by_user(fetch()))
-print(get_completion_times(d))
-print(get_errors_per_stage(d))
+errors_per_stage = get_errors_per_stage(d)
+completion_times = get_completion_times(d)
+plot_errors_per_stage_all(errors_per_stage)
+plot_completion_times_all(completion_times)
+plot_completion_times_scatter(completion_times)

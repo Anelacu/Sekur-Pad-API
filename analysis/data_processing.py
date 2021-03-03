@@ -151,8 +151,8 @@ def plot_completion_times_scatter(completion_times: dict) -> None:
 def plot_completion_box(completion_times:dict) -> None:
     df = pd.DataFrame.from_dict(completion_times)
     data_df = df.melt(var_name='stage',value_name='time')
-    sns.boxplot(x="stage", y="time", data=data_df, color='royalblue', showfliers=False,boxprops=dict(alpha=0.4))
-    sns.stripplot(x="stage", y="time", data=data_df, color='coral', size=6, jitter=False, alpha=0.4, marker='X')
+    sns.boxplot(x="stage", y="time", data=data_df, linewidth=0.9, color='royalblue', showfliers=False,boxprops=dict(alpha=0.5))
+    sns.stripplot(x="stage", y="time", data=data_df, color='coral', size=6, jitter=False, alpha=0.5, marker='X')
     plt.xlabel("Stage")
     plt.xticks(range(0, 12))
     plt.ylabel("Completion time (ms)")

@@ -143,9 +143,28 @@ def plot_completion_times_scatter(completion_times:dict) -> None:
     plt.savefig('plots/completion_time_scatter.png')
     plt.clf()
 
+
+def plot_errors_box(completion_times:dict) -> None:
+    y = []
+    x = []
+    for stage, times in completion_times.items():
+        y.append(stage)
+        x.append(sum(times))
+
+    data = list(zip(x, y))
+
+    plt.boxplot(data, labels=y)
+    plt.xlabel("Stage")
+    plt.xticks(np.array(y))
+    plt.ylabel("Errors")
+    plt.title("Number of errors for each stage")
+    plt.savefig('plots/errors_box.png')
+    plt.clf()
+
 d = filter_out_uncompleted(group_by_user(fetch()))
 errors_per_stage = get_errors_per_stage(d)
 completion_times = get_completion_times(d)
 plot_errors_per_stage_all(errors_per_stage)
 plot_completion_times_all(completion_times)
 plot_completion_times_scatter(completion_times)
+plot_errors_box(completion_times)

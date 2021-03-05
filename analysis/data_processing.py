@@ -151,8 +151,8 @@ def plot_completion_times_scatter(completion_times: dict) -> None:
 def plot_completion_box(completion_times:dict) -> None:
     df = pd.DataFrame.from_dict(completion_times)
     data_df = df.melt(var_name='stage',value_name='time')
-    sns.boxplot(x="stage", y="time", data=data_df, linewidth=0.9, color='royalblue', showfliers=False,boxprops=dict(alpha=0.5))
-    sns.stripplot(x="stage", y="time", data=data_df, color='coral', size=6, jitter=False, alpha=0.5, marker='X')
+    sns.boxplot(x="stage", y="time", data=data_df, linewidth=0.9, color='coral', showfliers=False,boxprops=dict(alpha=0.5))
+    sns.stripplot(x="stage", y="time", data=data_df, color='royalblue', size=6, jitter=False, alpha=0.5, marker='X')
     plt.xlabel("Stage")
     plt.xticks(range(0, 12))
     plt.ylabel("Completion time (ms)")
@@ -164,10 +164,11 @@ def plot_completion_box(completion_times:dict) -> None:
 d = filter_out_uncompleted(group_by_user(fetch()))
 errors_per_stage = get_errors_per_stage(d)
 completion_times = get_completion_times(d)
+print("No. of participants:", len(d.keys()))
 
 # Temp data
-errors_per_stage = {i: np.random.normal(3, 1, 40) * ((i-1)%3 + 0.2) for i in range(1, 13)}
-completion_times = {i: np.random.normal(10000, 3000, 40) * ((i-1)%3 * 0.1 + 0.2) for i in range(1, 13)}
+#errors_per_stage = {i: np.random.normal(3, 1, 40) * ((i-1)%3 + 0.2) for i in range(1, 13)}
+#completion_times = {i: np.random.normal(10000, 3000, 40) * ((i-1)%3 * 0.1 + 0.2) for i in range(1, 13)}
 
 plot_errors_per_stage_all(errors_per_stage)
 plot_completion_times_all(completion_times)

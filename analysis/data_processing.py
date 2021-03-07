@@ -61,7 +61,7 @@ def get_completion_times(data):
                 print(
                     f"User {uuid} does not have start or correct pin on stage {i}")
             else:
-                times[i].append(c - s)
+                times[i].append((c - s)/1000)
 
     return times
 
@@ -94,8 +94,9 @@ def plot_errors_per_stage_all(errors_per_stage_data: dict) -> None:
     width = 0.35
     fig, ax = plt.subplots()
     rects1 = ax.bar(x - width/2, means, width, label='Mean', color='coral')
-    rects2 = ax.bar(x + width/2, medians, width, label='Median', color='royalblue')
-    
+    rects2 = ax.bar(x + width/2, medians, width,
+                    label='Median', color='royalblue')
+
     plt.legend()
     plt.xlabel("Stage")
     plt.xticks(np.array(stages))
@@ -118,12 +119,13 @@ def plot_completion_times_all(completion_times: dict) -> None:
     width = 0.35
     fig, ax = plt.subplots()
     rects1 = ax.bar(x - width/2, means, width, label='Mean', color='coral')
-    rects2 = ax.bar(x + width/2, medians, width, label='Median', color='royalblue')
+    rects2 = ax.bar(x + width/2, medians, width,
+                    label='Median', color='royalblue')
 
     plt.legend()
     plt.xlabel("Stage")
     plt.xticks(np.array(stages))
-    plt.ylabel("Completion time (ms)")
+    plt.ylabel("Completion time (s)")
     plt.title("Mean vs Median completion time for each stage")
     plt.savefig('plots/completion_time_all.png')
     plt.clf()
@@ -142,22 +144,51 @@ def plot_completion_times_scatter(completion_times: dict) -> None:
     plt.scatter(x, y, marker='x', alpha=0.5, s=30, c='coral')
     plt.xlabel("Stage")
     plt.xticks(np.array(stages))
-    plt.ylabel("Completion time (ms)")
+    plt.ylabel("Completion time (s)")
     plt.title("Completion time for each stage")
     plt.savefig('plots/completion_time_scatter.png')
     plt.clf()
 
 
-def plot_completion_box(completion_times:dict) -> None:
+def plot_completion_box(completion_times: dict) -> None:
+    colors = ['lime', 'gold', 'orangered'] * 4
+
     df = pd.DataFrame.from_dict(completion_times)
-    data_df = df.melt(var_name='stage',value_name='time')
-    sns.boxplot(x="stage", y="time", data=data_df, linewidth=0.9, color='coral', showfliers=False,boxprops=dict(alpha=0.5))
-    sns.stripplot(x="stage", y="time", data=data_df, color='royalblue', size=6, jitter=False, alpha=0.5, marker='X')
+    data_df = df.melt(var_name='stage', value_name='time')
+    sns.boxplot(x="stage", y="time", data=data_df, linewidth=0.9,
+                palette=colors, showfliers=False, boxprops=dict(alpha=0.5))
+    sns.stripplot(x="stage", y="time", data=data_df, color='royalblue',
+                  size=6, jitter=False, alpha=0.5, marker='X')
     plt.xlabel("Stage")
     plt.xticks(range(0, 12))
-    plt.ylabel("Completion time (ms)")
+    plt.ylabel("Completion time (s)")
     plt.title("Completion time for each stage")
     plt.savefig('plots/completion_time_box_scatter.png')
+    plt.clf()
+
+
+def plot_completion_sorted_box(completion_times):
+    cols = []
+    for i in range(3):
+        stages = [i+1+j*3 for j in range(4)]
+        cols.extend(stages)
+
+    df = pd.DataFrame.from_dict(completion_times)
+    # df = df[cols]
+    data_df = df.melt(var_name='stage', value_name='time')
+    # df.reindex(cols)
+
+    colors = ['lime'] * 4 + ['gold'] * 4 + ['orangered'] * 4
+
+    sns.boxplot(x="stage", y="time", data=data_df, linewidth=0.9, order=cols,
+                palette=colors, showfliers=False, boxprops=dict(alpha=0.5))
+    sns.stripplot(x="stage", y="time", data=data_df, color='royalblue', order=cols,
+                  size=6, jitter=False, alpha=0.5, marker='X')
+    plt.xlabel("Stage")
+    plt.xticks(range(0, 12))
+    plt.ylabel("Completion time (s)")
+    plt.title("Completion time for each stage (sorted)")
+    plt.savefig('plots/completion_time_sorted_box_scatter.png')
     plt.clf()
 
 
@@ -174,3 +205,4 @@ plot_errors_per_stage_all(errors_per_stage)
 plot_completion_times_all(completion_times)
 plot_completion_times_scatter(completion_times)
 plot_completion_box(completion_times)
+plot_completion_sorted_box(completion_times)

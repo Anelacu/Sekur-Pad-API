@@ -23,6 +23,7 @@ exports.new = function(req, res) {
       'Got create request with ' +
       '\nuserUuid: ' + req.body.userUuid +
       '\ntimestamp: ' + req.body.timestamp + '\nactivity: ' + req.body.activity)
+  /**
   var log = new Log();
   log.userUuid = req.body.userUuid;
   log.timestamp = req.body.timestamp;
@@ -37,4 +38,5 @@ exports.new = function(req, res) {
       res.json({message: 'New log created!', data: log});
     }
   });
+  */
 };

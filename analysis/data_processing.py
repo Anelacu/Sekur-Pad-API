@@ -82,26 +82,23 @@ def get_errors_per_stage(data):
 
 
 def plot_errors_per_stage_all(errors_per_stage_data: dict) -> None:
+    colors = ['lime', 'gold', 'orangered'] * 4
     means = []
-    medians = []
     stages = []
     for stage, errors in errors_per_stage_data.items():
         stages.append(stage)
         means.append(np.mean(errors))
-        medians.append(np.median(errors))
 
     x = np.array(stages)
     width = 0.35
     fig, ax = plt.subplots()
-    rects1 = ax.bar(x - width/2, means, width, label='Mean', color='coral')
-    rects2 = ax.bar(x + width/2, medians, width,
-                    label='Median', color='royalblue')
+    rects1 = ax.bar(x - width/2, means, width, label='Mean', color=colors, alpha=0.5)
 
     plt.legend()
     plt.xlabel("Stage")
     plt.xticks(np.array(stages))
     plt.ylabel("Number of errors")
-    plt.title("Mean vs Median number of errors at each stage")
+    plt.title("Mean number of errors at each stage")
     plt.savefig('plots/errors_per_stage_all.png')
     plt.clf()
 
@@ -174,9 +171,7 @@ def plot_completion_sorted_box(completion_times):
         cols.extend(stages)
 
     df = pd.DataFrame.from_dict(completion_times)
-    # df = df[cols]
     data_df = df.melt(var_name='stage', value_name='time')
-    # df.reindex(cols)
 
     colors = ['lime'] * 4 + ['gold'] * 4 + ['orangered'] * 4
 

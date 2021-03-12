@@ -92,7 +92,7 @@ def plot_errors_per_stage_all(errors_per_stage_data: dict) -> None:
     x = np.array(stages)
     width = 0.35
     fig, ax = plt.subplots()
-    rects1 = ax.bar(x - width/2, means, width, label='Mean', color=colors, alpha=0.5)
+    rects1 = ax.bar(x - width/2, means, width, color=colors, alpha=0.5)
 
     plt.legend()
     plt.xlabel("Stage")
